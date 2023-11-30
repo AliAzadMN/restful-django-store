@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.conf import settings
 
+from .validators import validate_phone_number
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
@@ -20,3 +22,13 @@ class Product(models.Model):
     inventory = models.IntegerField(validators=[MinValueValidator(0)])
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
+
+
+class Customer(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    phone_number = models.CharField(
+        max_length=11,
+        validators=[validate_phone_number],
+        unique=True,
+    )
+    birth_date = models.DateField(blank=True, null=True)

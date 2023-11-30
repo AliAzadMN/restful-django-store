@@ -24,6 +24,11 @@ class Product(models.Model):
     datetime_modified = models.DateTimeField(auto_now=True)
 
 
+class CommentManager(models.Manager):
+    def get_approved(self):
+        return self.get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
+
+
 class Comment(models.Model):
     COMMENT_STATUS_WAITING = 'w'
     COMMENT_STATUS_APPROVED = 'a'
@@ -39,6 +44,8 @@ class Comment(models.Model):
     body = models.TextField()
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=COMMENT_STATUS, default=COMMENT_STATUS_WAITING)
+
+    objects = CommentManager()
 
 
 class Customer(models.Model):

@@ -1,8 +1,10 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.conf import settings
+from uuid import uuid4
 
 from .validators import validate_phone_number
+
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
@@ -88,3 +90,8 @@ class OrderItem(models.Model):
 
     class Meta:
         unique_together = [['order', 'product'], ]
+
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    created_at = models.DateTimeField(auto_now_add=True)

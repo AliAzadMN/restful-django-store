@@ -58,6 +58,14 @@ class Customer(models.Model):
     )
     birth_date = models.DateField(blank=True, null=True)
 
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
+
 
 class Address(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)

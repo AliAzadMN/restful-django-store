@@ -55,7 +55,6 @@ class Customer(models.Model):
     phone_number = models.CharField(
         max_length=11,
         validators=[validate_phone_number],
-        unique=True,
     )
     birth_date = models.DateField(blank=True, null=True)
 

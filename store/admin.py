@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.db.models import Count
 
-from .models import Customer
+from .models import Category, Customer
 
 
 @admin.register(Customer)
@@ -11,4 +12,17 @@ class CustomerAdmin(admin.ModelAdmin):
 
     def email(self, customer):
         return customer.user.email
-        
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['title', 'num_of_products', 'top_product', ]
+    search_fields = ['title__istartswith', ]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('products').annotate(products_count=Count('products'))
+    
+    @admin.display(ordering="products_count")
+    def num_of_products(self, category):
+        return category.products_count
+    

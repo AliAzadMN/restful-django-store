@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Category, Customer
+from .models import Category, Customer, Product
 
 
 @admin.register(Customer)
@@ -25,4 +25,9 @@ class CategoryAdmin(admin.ModelAdmin):
     @admin.display(ordering="products_count")
     def num_of_products(self, category):
         return category.products_count
-    
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'inventory', 'price', ]
+    list_editable = ['price', ]

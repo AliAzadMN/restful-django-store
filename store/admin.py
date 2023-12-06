@@ -31,6 +31,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'category', 'inventory', 'price', 'status_inventory', ]
     list_editable = ['price', ]
+    list_filter = ["datetime_created", ]
 
     def status_inventory(self, product):
         if product.inventory < 10:

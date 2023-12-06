@@ -29,5 +29,12 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'inventory', 'price', ]
+    list_display = ['id', 'name', 'inventory', 'price', 'status_inventory', ]
     list_editable = ['price', ]
+
+    def status_inventory(self, product):
+        if product.inventory < 10:
+            return "Low"
+        if product.inventory > 50:
+            return "High"
+        return "Medium"

@@ -58,6 +58,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'category', 'inventory', 'price', 'status_inventory', ]
     list_editable = ['price', ]
     list_filter = ["datetime_created", InventoryFilter, ]
+    actions = ['clear_inventory', ]
 
     def status_inventory(self, product):
         if product.inventory < 10:
@@ -65,3 +66,8 @@ class ProductAdmin(admin.ModelAdmin):
         if product.inventory > 50:
             return "High"
         return "Medium"
+
+    @admin.action(description="Clear inventory to zero")
+    def clear_inventory(self, request, queryset):
+        update_counts = queryset.update(inventory=0)
+        self.message_user(request, f"{update_counts} of products inventories cleared to zero")

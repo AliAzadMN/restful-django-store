@@ -60,6 +60,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ["datetime_created", InventoryFilter, ]
     actions = ['clear_inventory', ]
     search_fields = ['name', ]
+    prepopulated_fields = {
+        'slug': ['name', ]
+    }
 
     def status_inventory(self, product):
         if product.inventory < 10:

@@ -12,6 +12,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'email', ]
     ordering = ['user__last_name',]
     search_fields = ['user__last_name__istartswith',]
+    list_select_related = ['user', ]
 
     def email(self, customer):
         return customer.user.email

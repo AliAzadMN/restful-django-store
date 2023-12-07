@@ -25,6 +25,8 @@ class Product(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
 
 class CommentManager(models.Manager):
     def get_approved(self):

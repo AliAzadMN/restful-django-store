@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
 
-from .models import Category, Comment, Customer, Product
+from .models import Address, Category, Comment, Customer, Product
 
 
 @admin.register(Customer)
@@ -94,3 +94,8 @@ class CommentAdmin(admin.ModelAdmin):
     list_editable = ['status', ]
     list_per_page = 50
     autocomplete_fields = ['product', ]
+
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ['customer', 'province', 'city', ]

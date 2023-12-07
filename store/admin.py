@@ -93,3 +93,4 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'product', 'status', ]
     list_editable = ['status', ]
     list_per_page = 50
+    autocomplete_fields = ['product', ]

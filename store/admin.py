@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.db.models import Count
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.html import format_html
 
 from .models import Category, Comment, Customer, Product
 
@@ -55,7 +58,7 @@ class InventoryFilter(admin.SimpleListFilter):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'category', 'inventory', 'price', 'status_inventory', ]
+    list_display = ['id', 'name', 'category', 'inventory', 'price', 'status_inventory', 'num_of_comments', ]
     list_editable = ['price', ]
     list_filter = ["datetime_created", InventoryFilter, ]
     actions = ['clear_inventory', ]
@@ -64,12 +67,20 @@ class ProductAdmin(admin.ModelAdmin):
         'slug': ['name', ]
     }
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('comments').annotate(comments_count=Count('comments'))
+
     def status_inventory(self, product):
         if product.inventory < 10:
             return "Low"
         if product.inventory > 50:
             return "High"
         return "Medium"
+    
+    @admin.display(ordering="comments_count", description="# comments")
+    def num_of_comments(self, product):
+        url = reverse("admin:store_comment_changelist") + "?" + urlencode({"product__id": product.id})
+        return format_html("<a href={}>{}</a>", url, product.comments_count)
 
     @admin.action(description="Clear inventory to zero")
     def clear_inventory(self, request, queryset):

@@ -60,6 +60,9 @@ class Customer(models.Model):
     )
     birth_date = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        return self.user.username
+
     @property
     def first_name(self):
         return self.user.first_name

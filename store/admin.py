@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Category, Customer, Product
+from .models import Category, Comment, Customer, Product
 
 
 @admin.register(Customer)
@@ -75,3 +75,10 @@ class ProductAdmin(admin.ModelAdmin):
     def clear_inventory(self, request, queryset):
         update_counts = queryset.update(inventory=0)
         self.message_user(request, f"{update_counts} of products inventories cleared to zero")
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'product', 'status', ]
+    list_editable = ['status', ]
+    list_per_page = 50

@@ -2,9 +2,15 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
-from .models import Category
-from .serializers import CategorySerializer, CreateUpdateCategorySerializer
+from .models import Category, Product
 from .permissions import IsAdminOrReadOnly
+from .paginations import DefaultPagination
+from .serializers import (
+    CategorySerializer,
+    CreateUpdateCategorySerializer,
+    ProductSerializer,
+    CreateUpdateProductSerializer,
+)
 
 
 class CategoryViewSet(ModelViewSet):
@@ -26,3 +32,23 @@ class CategoryViewSet(ModelViewSet):
             return CreateUpdateCategorySerializer
         return CategorySerializer
     
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.select_related("category")
+    permission_classes = [IsAdminOrReadOnly]
+    pagination_class = DefaultPagination
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST', 'PATCH', 'PUT']:
+            return CreateUpdateProductSerializer
+        return ProductSerializer
+
+    def destroy(self, request, pk):
+        product = self.get_object()
+        if product.order_items.count() > 0:
+            return Response(
+                data={"Error": "There is some order items including that product. Please remove them first"},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

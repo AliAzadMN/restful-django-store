@@ -1,10 +1,14 @@
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter, SearchFilter
+
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Category, Product
 from .permissions import IsAdminOrReadOnly
 from .paginations import DefaultPagination
+from .filters import ProductFilter
 from .serializers import (
     CategorySerializer,
     CreateUpdateCategorySerializer,
@@ -37,6 +41,10 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.select_related("category")
     permission_classes = [IsAdminOrReadOnly]
     pagination_class = DefaultPagination
+    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+    search_fields = ['name', ]
+    filterset_class = ProductFilter
+    ordering_fields = ['id', 'inventory', ]
 
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH', 'PUT']:

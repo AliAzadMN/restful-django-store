@@ -54,3 +54,11 @@ class CreateUpdateProductSerializer(serializers.ModelSerializer):
         instance.slug = slugify(instance.name)
         instance.save()
         return instance
+
+
+class UserCommentSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.username")
+
+    class Meta:
+        model = models.Comment
+        fields = ['id', 'user', 'body', ]

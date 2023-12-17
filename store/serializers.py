@@ -87,3 +87,9 @@ class CreateCommentSerializer(serializers.ModelSerializer):
         comment.user = self.context['request'].user
         comment.save()
         return comment
+    
+
+class UpdateCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Comment
+        fields = ['status', ]

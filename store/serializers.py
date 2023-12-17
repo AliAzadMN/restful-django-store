@@ -74,3 +74,16 @@ class AdminCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Comment
         fields = ['id', 'user', 'body', ]
+
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Comment
+        fields = ['body', ]
+
+    def create(self, validated_data):
+        comment = models.Comment(**validated_data)
+        comment.product_id = self.context['product_pk']
+        comment.user = self.context['request'].user
+        comment.save()
+        return comment

@@ -62,3 +62,15 @@ class UserCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Comment
         fields = ['id', 'user', 'body', ]
+
+
+class AdminCommentSerializer(serializers.ModelSerializer):
+    user = serializers.HyperlinkedRelatedField(
+        view_name='user-detail',
+        lookup_field='id',
+        read_only=True,
+    )
+
+    class Meta:
+        model = models.Comment
+        fields = ['id', 'user', 'body', ]

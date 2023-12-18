@@ -9,3 +9,9 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.user.is_staff
         )
     
+
+class SendOnlyGetDeleteRequest(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(
+            request.method in ['GET', 'DELETE', ]
+        )
